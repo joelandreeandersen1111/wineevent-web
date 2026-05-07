@@ -6,11 +6,14 @@
 - GitHub Pages til hosting
 
 ## Status
-- [ ] index.html oprettet
-- [ ] Beehiiv embed indsat
-- [ ] Pushet til GitHub
-- [ ] GitHub Pages aktiveret
-- [ ] Siden live
+- [x] index.html oprettet
+- [x] Beehiiv embed indsat
+- [x] Pushet til GitHub
+- [x] GitHub Pages aktiveret
+- [x] Siden live
+
+## Live URL
+- https://joelandreeandersen1111.github.io/wineevent-web
 
 ## Sider
 - index.html — landing page med signup
