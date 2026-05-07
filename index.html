@@ -172,9 +172,42 @@
         <div class="mx-auto max-w-4xl rounded-[2rem] border border-wine-light/30 bg-[linear-gradient(135deg,rgba(139,26,26,0.45),rgba(255,255,255,0.05))] p-6 text-center shadow-2xl shadow-wine/20 sm:p-10 lg:p-14">
           <p class="text-sm font-bold uppercase tracking-[0.25em] text-white/70">Beta-listen</p>
           <h2 class="mt-4 text-3xl font-black tracking-tight sm:text-5xl">Vi lukker de første 100 beta-testere ind løbende</h2>
-          <div class="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-black/30 p-4 sm:p-6">
-            <script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="d19e0d22-0c84-4e1e-9f74-25f5a9f20cb4"></script>
-          </div>
+          <form id="signup-form" class="mt-8 rounded-2xl border border-white/10 bg-black/30 p-4 text-left sm:p-6">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <label class="block">
+                <span class="text-sm font-semibold text-white/72">Fornavn</span>
+                <input
+                  id="first-name"
+                  name="first_name"
+                  type="text"
+                  autocomplete="given-name"
+                  required
+                  class="mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.07] px-4 py-3 text-white outline-none transition placeholder:text-white/35 focus:border-wine-light focus:ring-2 focus:ring-wine/40"
+                  placeholder="Dit fornavn"
+                />
+              </label>
+              <label class="block">
+                <span class="text-sm font-semibold text-white/72">Email</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  class="mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.07] px-4 py-3 text-white outline-none transition placeholder:text-white/35 focus:border-wine-light focus:ring-2 focus:ring-wine/40"
+                  placeholder="din@email.dk"
+                />
+              </label>
+            </div>
+            <button
+              id="signup-button"
+              type="submit"
+              class="mt-5 w-full rounded-full bg-wine px-7 py-4 text-center text-base font-bold text-white shadow-2xl shadow-wine/30 transition hover:bg-wine-light disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Skriv mig op
+            </button>
+            <p id="signup-message" class="mt-4 min-h-6 text-center text-sm font-semibold text-white/72" aria-live="polite"></p>
+          </form>
         </div>
       </section>
     </main>
@@ -182,5 +215,54 @@
     <footer class="border-t border-white/10 px-6 py-8 text-center text-sm text-white/50 sm:px-8 lg:px-12">
       WineEvent · Beta 2026
     </footer>
+    <script>
+      const signupForm = document.querySelector("#signup-form");
+      const signupButton = document.querySelector("#signup-button");
+      const signupMessage = document.querySelector("#signup-message");
+
+      signupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(signupForm);
+        const payload = {
+          email: formData.get("email"),
+          first_name: formData.get("first_name"),
+          reactivate_existing: false,
+          send_welcome_email: true,
+        };
+
+        signupButton.disabled = true;
+        signupButton.textContent = "Sender...";
+        signupMessage.textContent = "";
+        signupMessage.className = "mt-4 min-h-6 text-center text-sm font-semibold text-white/72";
+
+        try {
+          const response = await fetch(
+            "https://api.beehiiv.com/v2/publications/d19e0d22-0c84-4e1e-9f74-25f5a9f20cb4/subscriptions",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error("Beehiiv signup fejlede");
+          }
+
+          signupForm.reset();
+          signupMessage.textContent = "Tak! Du er på listen. Vi sender dig en invitation når betaen åbner.";
+          signupMessage.className = "mt-4 min-h-6 text-center text-sm font-semibold text-emerald-300";
+        } catch (error) {
+          signupMessage.textContent = "Noget gik galt. Prøv igen om lidt.";
+          signupMessage.className = "mt-4 min-h-6 text-center text-sm font-semibold text-red-300";
+        } finally {
+          signupButton.disabled = false;
+          signupButton.textContent = "Skriv mig op";
+        }
+      });
+    </script>
   </body>
 </html>
