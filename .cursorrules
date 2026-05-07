@@ -1,0 +1,9 @@
+# WineEvent Landing Page — Cursor regler
+
+- Ét sprog: dansk (al tekst på siden er dansk)
+- Én fil: al kode ligger i index.html — ingen separate CSS eller JS filer
+- Tailwind via CDN — ingen npm, ingen build-step
+- Beehiiv embed til signup-formular
+- Ingen frameworks, ingen dependencies
+- Siden skal kunne hostes statisk på GitHub Pages
+- Hold koden ren og kommenteret
